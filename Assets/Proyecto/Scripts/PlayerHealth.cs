@@ -10,10 +10,12 @@ public class PlayerHealth : MonoBehaviour
     public Image[] hearts;     // Array de imágenes de corazones
     public Sprite fullHeart;   // Sprite de corazón lleno
     public Sprite emptyHeart;  // Sprite de corazón vacío
+    public Canvas gameOverCanvas; // Referencia al canvas de "Game Over"
 
     private void Start()
     {
         currentHealth = maxHealth;
+        UpdateHearts();
     }
 
     private void UpdateHearts()
@@ -47,9 +49,7 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-
-            Destroy(gameObject);
-            // Aquí puedes llamar a una función de "Game Over" o realizar alguna acción cuando el jugador pierde todas las vidas.
+            ShowGameOverCanvas();
         }
 
         UpdateHearts();
@@ -65,5 +65,15 @@ public class PlayerHealth : MonoBehaviour
         }
 
         UpdateHearts();
+    }
+
+    private void ShowGameOverCanvas()
+    {
+        if (gameOverCanvas != null)
+        {
+            Destroy(gameObject, 0.01f);
+            gameOverCanvas.gameObject.SetActive(true);
+            // Aquí puedes realizar acciones adicionales al mostrar el canvas de "Game Over".
+        }
     }
 }
