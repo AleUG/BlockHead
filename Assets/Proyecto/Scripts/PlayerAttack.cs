@@ -59,26 +59,20 @@ public class PlayerAttack : MonoBehaviour
             isAttacking = true; // Indica que el jugador está atacando
             animator.SetTrigger("Ataque"); // Activa la animación de ataque
             attackCollider.enabled = true; // Activa el BoxCollider Trigger
-            Invoke("EndAttackAnimation", 0.5f); // Cambia el tiempo según la duración de la animación
+            Invoke("EndAttackAnimation", 0.5f);
         }
-        else
+        else if (Time.time - lastAttackTime <= comboWindow)
         {
-            // Si el jugador ataca nuevamente dentro de la ventana de combo, ejecuta el segundo ataque
-            if (Time.time - lastAttackTime <= comboWindow)
-            {
-                lastAttackTime = Time.time; // Actualiza el tiempo del último ataque
-                animator.SetTrigger("ComboAttack"); // Activa la animación de combo de ataque
-                attackCollider.enabled = true; // Activa el BoxCollider Trigger
-                Invoke("EndAttackAnimation", 0.5f); // Cambia el tiempo según la duración de la animación
-            }
+            lastAttackTime = Time.time; // Actualiza el tiempo del último ataque
+            animator.SetTrigger("ComboAttack"); // Activa la animación de combo de ataque
+            attackCollider.enabled = true; // Activa el BoxCollider Trigger
         }
     }
 
     void EndAttackAnimation()
     {
-        isAttacking = false; // Restablece el estado de ataque
-        animator.ResetTrigger("Ataque"); // Resetea el trigger de la animación de ataque
-        animator.ResetTrigger("ComboAttack"); // Resetea el trigger de la animación de combo
+        animator.ResetTrigger("Ataque");
+
     }
 
     // Función para encontrar el enemigo más cercano
