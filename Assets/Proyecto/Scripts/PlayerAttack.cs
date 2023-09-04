@@ -1,22 +1,30 @@
 using UnityEngine;
+using System.Collections;
+using TMPro;
 
 public class PlayerAttack : MonoBehaviour
 {
     private KeyCode attackKey = KeyCode.J;
-    public int attackDamage = 20;
-    public float comboWindow = 0.5f; // Ventana de tiempo para activar el segundo ataque
-    public float maxTurnDistance = 5.0f; // Distancia máxima para girar hacia un enemigo
+    public int attackDamage = 1;
+    public float comboWindow = 1.5f;
+    public float maxTurnDistance = 5.0f;
 
     private Animator animator;
-    public BoxCollider attackCollider; // Referencia al BoxCollider Trigger del jugador
+    private Coroutine attackCoroutine;
 
-    private bool isAttacking = false; // Indica si el jugador está atacando
-    private float lastAttackTime = 0f; // Momento del último ataque
+    private bool isAttacking = false;
+    private float lastAttackTime = 0f;
+    public float coroutineTime = 0.5f;
+
+    public TMP_Text comboText; // Referencia al TextMeshPro que muestra el contador de combo
+    private int comboCount = 0;
+    private float lastComboTime = 0f;
+
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        attackCollider = GetComponentInChildren<BoxCollider>(); // Asigna el BoxCollider Trigger
+        comboText = GameObject.Find("ComboText").GetComponent<TMP_Text>();
     }
 
     private void Update()
@@ -26,16 +34,43 @@ public class PlayerAttack : MonoBehaviour
             PerformAttack();
         }
 
-        // Si ha pasado suficiente tiempo desde el último ataque, restablece el combo
         if (Time.time - lastAttackTime > comboWindow)
         {
             isAttacking = false;
+
+            // Verifica si ha pasado suficiente tiempo desde el último combo
+            if (Time.time - lastComboTime > comboWindow)
+            {
+                comboCount = 0;
+                comboText.text = "0"; // Actualiza el texto del contador de combos
+            }
+        }
+
+        if (comboCount <= 0)
+        {
+            comboText.gameObject.SetActive(false);
+        }
+        else
+        {
+            comboText.gameObject.SetActive(true);
         }
     }
 
     void PerformAttack()
+{
+    if (!isAttacking)
     {
-        if (!isAttacking)
+        // Verificar si el personaje está en el estado de salto
+        bool isJumping = animator.GetBool("Jump");
+
+        // Si el personaje está saltando, puede realizar un ataque especial
+        if (isJumping)
+        {
+                isAttacking = true;
+                // Ejecuta la animación de ataque especial para el salto
+                animator.SetTrigger("JumpAttack");
+        }
+        else
         {
             // Encuentra el enemigo más cercano
             GameObject nearestEnemy = FindNearestEnemy();
@@ -55,57 +90,95 @@ public class PlayerAttack : MonoBehaviour
                 }
             }
 
-            lastAttackTime = Time.time; // Actualiza el tiempo del último ataque
-            isAttacking = true; // Indica que el jugador está atacando
-            animator.SetTrigger("Ataque"); // Activa la animación de ataque
-            attackCollider.enabled = true; // Activa el BoxCollider Trigger
-            Invoke("EndAttackAnimation", 0.5f);
-        }
-        else if (Time.time - lastAttackTime <= comboWindow)
-        {
-            lastAttackTime = Time.time; // Actualiza el tiempo del último ataque
-            animator.SetTrigger("ComboAttack"); // Activa la animación de combo de ataque
-            attackCollider.enabled = true; // Activa el BoxCollider Trigger
+            lastAttackTime = Time.time;
+            isAttacking = true;
+            animator.SetTrigger("Ataque");
+            if (attackCoroutine != null)
+            {
+                StopCoroutine(attackCoroutine);
+            }
+            attackCoroutine = StartCoroutine(DisableAttackCollider());
         }
     }
 
-    void EndAttackAnimation()
+    else if (Time.time - lastAttackTime <= comboWindow)
     {
-        animator.ResetTrigger("Ataque");
+        if (!animator.GetBool("ComboAttack1"))
+        {
+            lastAttackTime = Time.time;
+            animator.SetBool("ComboAttack1", true);
+            if (attackCoroutine != null)
+            {
+                StopCoroutine(attackCoroutine);
+            }
+            attackCoroutine = StartCoroutine(DisableAttackCollider());
+            return;
+        }
+        else if (!animator.GetBool("ComboAttack2"))
+        {
+            lastAttackTime = Time.time;
+            animator.SetBool("ComboAttack2", true);
+            if (attackCoroutine != null)
+            {
+                StopCoroutine(attackCoroutine);
+            }
+            attackCoroutine = StartCoroutine(DisableAttackCollider());
+            return;
+        }
+    }
+}
 
+
+    IEnumerator DisableAttackCollider()
+    {
+        yield return new WaitForSeconds(coroutineTime);
+        isAttacking = false;
+        animator.SetBool("Ataque", false);
+        animator.SetBool("ComboAttack1", false);
+        animator.SetBool("ComboAttack2", false);
     }
 
-    // Función para encontrar el enemigo más cercano
     GameObject FindNearestEnemy()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        int enemyLayerMask = LayerMask.GetMask("Enemy");
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, maxTurnDistance, enemyLayerMask);
+
         GameObject nearestEnemy = null;
         float nearestDistance = Mathf.Infinity;
 
-        foreach (GameObject enemy in enemies)
+        foreach (Collider collider in hitColliders)
         {
-            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+            float distanceToEnemy = Vector3.Distance(transform.position, collider.transform.position);
 
             if (distanceToEnemy < nearestDistance)
             {
                 nearestDistance = distanceToEnemy;
-                nearestEnemy = enemy;
+                nearestEnemy = collider.gameObject;
             }
+
         }
 
         return nearestEnemy;
     }
 
-    // Función para manejar colisiones con enemigos
     void OnTriggerEnter(Collider other)
     {
-        if (animator.GetBool("Ataque") || animator.GetBool("ComboAttack") && other.CompareTag("Enemy"))
+        if ((animator.GetBool("Ataque") || animator.GetBool("ComboAttack1")) || animator.GetBool("ComboAttack2") && other.CompareTag("Enemy"))
         {
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
 
             if (enemyHealth != null)
             {
                 enemyHealth.TakeDamage(attackDamage);
+
+                // Incrementa el contador de combos
+                comboCount++;
+
+                // Actualiza el texto del contador de combos
+                comboText.text = "" + comboCount;
+
+                // Actualiza el tiempo del último combo
+                lastComboTime = Time.time;
             }
         }
     }

@@ -5,30 +5,32 @@ public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 50;
     public int currentHealth;
-    public Renderer enemyRenderer; // Referencia al componente Renderer del enemigo
-    public Color damageColor = Color.red; // Color para representar el daño
-    public float damageFlashDuration = 0.2f; // Duración de la animación de cambio de color
-    public float pushBackForce = 5.0f; // Fuerza de empuje hacia atrás al recibir daño
+    public Renderer enemyRenderer;
+    public Color damageColor = Color.red;
+    public float damageFlashDuration = 0.2f;
+    public float pushBackForce = 5.0f;
 
-    private Color originalColor; // Almacenar el color original del enemigo
-    private Rigidbody enemyRigidbody; // Referencia al componente Rigidbody del enemigo
+    public GameObject dropPrefab; // Prefab que el enemigo puede soltar
+    public GameObject dropOrb; // Prefab que el enemigo puede soltar
 
-    private Transform playerTransform; // Referencia al transform del jugador
+    private float dropProbability = 0.05f; // Probabilidad de soltar el prefab (0.3 significa 30%)
+
+    private Color originalColor;
+    private Rigidbody enemyRigidbody;
+    private Transform playerTransform;
+
+    private Orb orbScript;
 
     void Start()
     {
         currentHealth = maxHealth;
 
-        // Guardar el color original del enemigo
         if (enemyRenderer != null)
         {
             originalColor = enemyRenderer.material.color;
         }
 
-        // Obtener la referencia al componente Rigidbody del enemigo
         enemyRigidbody = GetComponent<Rigidbody>();
-
-        // Obtener la referencia al transform del jugador
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
@@ -38,33 +40,58 @@ public class EnemyHealth : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            EnemyDamage();
             Die();
+
+            // Verificar si el enemigo soltará el prefab
+            if (Random.value <= dropProbability && dropPrefab != null)
+            {
+                Instantiate(dropPrefab, transform.position, Quaternion.identity);
+            }
+
+            // Generar una cantidad aleatoria de orbes entre 1 y 10
+            int randomOrbCount = Random.Range(1, 11);
+
+            // Generar varios orbes
+            for (int i = 0; i < randomOrbCount; i++)
+            {
+                // Calcular una dirección aleatoria para cada orb
+                Vector3 randomDirection = Random.insideUnitSphere;
+                randomDirection.y = 0; // No aplicar movimiento en la dirección vertical
+                randomDirection.Normalize();
+
+                // Instanciar el orb en una posición ligeramente desplazada
+                Vector3 spawnPosition = transform.position + randomDirection * 1.5f; // Puedes ajustar la distancia de dispersión
+                Instantiate(dropOrb, spawnPosition, Quaternion.identity);
+            }
         }
         else
         {
-            // Aplicar empuje hacia atrás al recibir daño
-            if (enemyRigidbody != null)
-            {
-                Vector3 pushDirection = transform.position - playerTransform.position; // Dirección desde el jugador al enemigo
-                pushDirection.y = 0; // No aplicar fuerza en la dirección vertical
-                pushDirection.Normalize();
-                enemyRigidbody.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
-            }
-
-            // Iniciar la animación de cambio de color al recibir daño
-            if (enemyRenderer != null)
-            {
-                StartCoroutine(FlashDamageColor());
-            }
+            EnemyDamage();
         }
     }
 
     void Die()
     {
-        Destroy(gameObject, 0.01f);
+        Destroy(gameObject, 0.05f);
     }
 
-    // Corrutina para animar el cambio de color al recibir daño
+    private void EnemyDamage()
+    {
+        if (enemyRigidbody != null)
+        {
+            Vector3 pushDirection = transform.position - playerTransform.position;
+            pushDirection.y = 0;
+            pushDirection.Normalize();
+            enemyRigidbody.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
+        }
+
+        if (enemyRenderer != null)
+        {
+            StartCoroutine(FlashDamageColor());
+        }
+    }
+
     private IEnumerator FlashDamageColor()
     {
         if (enemyRenderer != null)

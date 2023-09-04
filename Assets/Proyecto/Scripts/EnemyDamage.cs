@@ -8,10 +8,10 @@ public class EnemyDamage : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            PlayerVida playerHealth = collision.gameObject.GetComponent<PlayerVida>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(damageAmount);
+                playerHealth.RecibirDaño(damageAmount);
             }
         }
     }

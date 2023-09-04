@@ -8,10 +8,10 @@ public class ItemVida : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerHealth playerVida = other.GetComponent<PlayerHealth>();
+            PlayerVida playerVida = other.GetComponent<PlayerVida>();
             if (playerVida != null)
             {
-                playerVida.Heal(cantidadRecuperacion); // Llama al método Curar del script PlayerVida
+                playerVida.Curar(cantidadRecuperacion); // Llama al método Curar del script PlayerVida
             }
 
             Destroy(gameObject); // Destruye el objeto del item
