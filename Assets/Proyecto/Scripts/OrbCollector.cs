@@ -41,7 +41,7 @@ public class OrbCollector : MonoBehaviour
     }
 
     // Método para actualizar el TextMeshPro Text con el contador actual
-    private void UpdateOrbText()
+    public void UpdateOrbText()
     {
         if (orbText != null)
         {

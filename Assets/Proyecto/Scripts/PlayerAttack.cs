@@ -16,7 +16,7 @@ public class PlayerAttack : MonoBehaviour
     private float lastAttackTime = 0f;
     public float coroutineTime = 0.5f;
 
-    public TMP_Text comboText; // Referencia al TextMeshPro que muestra el contador de combo
+    public TextMeshProUGUI comboText; // Referencia al TextMeshPro que muestra el contador de combo
     private int comboCount = 0;
     private float lastComboTime = 0f;
 
@@ -24,7 +24,7 @@ public class PlayerAttack : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        comboText = GameObject.Find("ComboText").GetComponent<TMP_Text>();
+        comboText = GameObject.Find("ComboText").GetComponent<TextMeshProUGUI>();
     }
 
     private void Update()

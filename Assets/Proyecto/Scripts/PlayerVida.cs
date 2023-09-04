@@ -79,7 +79,7 @@ public class PlayerVida : MonoBehaviour
 
             // Activar invulnerabilidad y el parpadeo del sprite
             ActivarInvulnerabilidad();
-            InvokeRepeating("ToggleSpriteRenderer", 0f, blinkInterval);
+            //InvokeRepeating("ToggleSpriteRenderer", 0f, blinkInterval);
             Invoke("DesactivarInvulnerabilidad", invulnerabilityDuration);
 
             // Reproducir el sonido de daño

@@ -1,19 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class ShopManager : MonoBehaviour
 {
     public TextMeshProUGUI orbCountText; // Referencia al TextMeshPro Text para mostrar la cantidad de orbes
-    public int itemCost = 10; // Costo del artículo en orbes
-    private int orbCount; // Cantidad de orbes del jugador
     public GameObject canvasShop;
+    public List<int> itemPrices; // Lista de precios de los artículos
+
+    private StatsUpgrade stats;
+    private PauseManager pauseManager;
+    private OrbCollector orbScript;
+
+    private bool isShopOpen;
 
     private void Start()
     {
-        // Puedes obtener la cantidad actual de orbes del jugador desde el OrbCollector u otra fuente
-        orbCount = FindObjectOfType<OrbCollector>().GetOrbCount();
-        UpdateOrbCountText();
+        orbScript = FindObjectOfType<OrbCollector>();
+        stats = GetComponent<StatsUpgrade>();
+        pauseManager = GetComponent<PauseManager>();
     }
 
     private void Update()
@@ -25,34 +31,61 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    public void BuyItem()
+    public void BuyItem(int itemIndex)
     {
-        // Comprueba si el jugador tiene suficientes orbes para comprar el artículo
-        if (FindObjectOfType<OrbCollector>().SpendOrbs(itemCost))
+        if (itemIndex >= 0 && itemIndex < itemPrices.Count)
         {
-            // Realiza aquí las acciones necesarias para dar al jugador el artículo comprado
-            Debug.Log("Has comprado el artículo.");
+            int itemCost = itemPrices[itemIndex]; // Obtiene el precio del artículo seleccionado
 
-            // Actualiza el contador de orbes en el TextMeshPro Text
-            UpdateOrbCountText();
+            // Comprueba si el jugador tiene suficientes orbes para comprar el artículo
+            if (FindObjectOfType<OrbCollector>().SpendOrbs(itemCost))
+            {
+                // Realiza aquí las acciones necesarias para dar al jugador el artículo comprado
+                Debug.Log("Has comprado el artículo.");
+
+                if (itemIndex == 0)
+                {
+                    stats.UpgradeLife();
+                }
+                else if (itemIndex == 1)
+                {
+                    stats.UpgradeVelocity();
+                }
+                else if (itemIndex == 2)
+                {
+                    stats.UpgradeDamage();
+                }
+
+                // Actualiza el contador de orbes en el TextMeshPro Text
+                orbScript.UpdateOrbText();
+            }
+            else
+            {
+                // El jugador no tiene suficientes orbes para comprar el artículo
+                Debug.Log("No tienes suficientes orbes para comprar este artículo.");
+                //Condición para que no se ejecute el el botón
+            }
         }
         else
         {
-            // El jugador no tiene suficientes orbes para comprar el artículo
-            Debug.Log("No tienes suficientes orbes para comprar este artículo.");
+            Debug.LogError("Índice de artículo fuera de rango.");
         }
     }
-
 
     private void ToggleShopMenu()
     {
         // Activa o desactiva el Canvas de compra
         canvasShop.SetActive(!canvasShop.activeSelf);
-    }
 
-    private void UpdateOrbCountText()
-    {
-        // Actualiza el TextMeshPro Text para mostrar la cantidad de orbes
-        orbCountText.text = orbCount.ToString();
+        // Pausa o reanuda el juego según si el menú de la tienda está abierto o cerrado
+        isShopOpen = !isShopOpen;
+        if (isShopOpen)
+        {
+            pauseManager.PauseGame();
+        }
+        else
+        {
+            pauseManager.ResumeGame();
+        }
     }
 }
