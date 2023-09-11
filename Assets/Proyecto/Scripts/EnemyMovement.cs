@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    public float moveSpeed = 3.5f;
+    public float originalMoveSpeed = 3.5f; // Almacena el valor original de moveSpeed
     public float followDistance = 5.0f; // Distancia a partir de la cual el enemigo seguirá al jugador
     public float rotationSpeed = 10f;
 
@@ -22,7 +22,12 @@ public class EnemyMovement : MonoBehaviour
         animator = GetComponent<Animator>();
 
         enemyHealth = GetComponent<EnemyHealth>();
+
+        // Almacena el valor original de moveSpeed en la variable originalMoveSpeed
+        originalMoveSpeed = moveSpeed;
     }
+
+    public float moveSpeed = 3.5f; // Ahora es una variable pública para modificar en el Inspector
 
     void Update()
     {
@@ -78,7 +83,7 @@ public class EnemyMovement : MonoBehaviour
     private void FinishAttack()
     {
         // La animación de ataque ha terminado, permite que el enemigo vuelva a moverse y seguir al jugador
-        moveSpeed = 3.5f;
+        moveSpeed = originalMoveSpeed; // Restaura el valor original de moveSpeed
         isAttacking = false;
         isCooldown = false;
     }
