@@ -51,7 +51,7 @@ public class StatsUpgrade : MonoBehaviour
                 // Aquí puedes aplicar una animación diferente para compras posteriores de vida
                 // animator.SetTrigger("OtraAnimacion");
             }
-            else if (lifeUpgradesBought == 3)
+            else if (lifeUpgradesBought == 2)
             {
                 animator.SetTrigger("Scale3");
             }

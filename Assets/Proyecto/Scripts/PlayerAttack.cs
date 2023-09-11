@@ -20,6 +20,9 @@ public class PlayerAttack : MonoBehaviour
     private int comboCount = 0;
     private float lastComboTime = 0f;
 
+    public AudioClip attackAudioClip; // Referencia al AudioClip para el sonido de ataque
+    public AudioSource audioSource; // Referencia al AudioSource
+
 
     private void Start()
     {
@@ -66,9 +69,9 @@ public class PlayerAttack : MonoBehaviour
         // Si el personaje está saltando, puede realizar un ataque especial
         if (isJumping)
         {
-                isAttacking = true;
-                // Ejecuta la animación de ataque especial para el salto
-                animator.SetTrigger("JumpAttack");
+            isAttacking = true;
+            // Ejecuta la animación de ataque especial para el salto
+            animator.SetTrigger("JumpAttack");
         }
         else
         {
@@ -163,7 +166,7 @@ public class PlayerAttack : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if ((animator.GetBool("Ataque") || animator.GetBool("ComboAttack1")) || animator.GetBool("ComboAttack2") && other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
 
@@ -179,6 +182,12 @@ public class PlayerAttack : MonoBehaviour
 
                 // Actualiza el tiempo del último combo
                 lastComboTime = Time.time;
+
+                // Reproducir el sonido de ataque
+                if (attackAudioClip != null)
+                {
+                    audioSource.PlayOneShot(attackAudioClip);
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Orb : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class Orb : MonoBehaviour
     public float speedIncreaseRate = 1f;
     public float collectionDistance = 1.0f;
     public float activationDistance = 3.0f;
+    public float orbLifetime = 5.0f; // Duración de vida de la orbe en segundos
 
     private Transform player;
     private bool isMovingToPlayer = false;
@@ -17,6 +19,8 @@ public class Orb : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         currentMovementSpeed = initialMovementSpeed;
+
+        OrbActive();
     }
 
     private void Update()
@@ -74,12 +78,18 @@ public class Orb : MonoBehaviour
     public void PauseOrbScript()
     {
         isPaused = true;
-        Invoke("ResumeOrbScript", 2.0f); // Después de un segundo, reanuda el script
+        Invoke("ResumeOrbScript", 2.0f); // Después de dos segundos, reanuda el script
     }
 
     // Método para reanudar el script
     public void ResumeOrbScript()
     {
         isPaused = false;
+    }
+
+    private IEnumerator OrbActive()
+    {
+        yield return new WaitForSeconds(orbLifetime);
+        Destroy(gameObject);
     }
 }

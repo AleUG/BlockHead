@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic; // Agrega esta línea para usar List.
 
 public class PlayerVida : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class PlayerVida : MonoBehaviour
     public Image damageIndicator; // Referencia al sprite de indicación de daño
 
     private float targetDamageFillAmount = 1f;
+
+    public List<Renderer> playerRender; // Lista de Renderers
+    private List<Color> originalColors = new List<Color>();
 
 
     public AudioSource gameplayMusicSource; // Referencia al AudioSource de la música del gameplay
@@ -31,6 +35,15 @@ public class PlayerVida : MonoBehaviour
     {
         vidaActual = vidaMaxima; // Establece la vida actual al valor máximo al iniciar
         rb = GetComponent<Rigidbody>();
+
+        // Guarda los colores originales de los Renderers en la lista originalColors
+        foreach (Renderer renderer in playerRender)
+        {
+            if (renderer != null)
+            {
+                originalColors.Add(renderer.material.color);
+            }
+        }
     }
 
 
@@ -55,18 +68,18 @@ public class PlayerVida : MonoBehaviour
             // Aquí puedes desactivar otros componentes relacionados con el jugador si es necesario
 
             // Reproducir el sonido de daño
-            /*if (damageAudioSource != null)
+            if (damageAudioSource != null)
             {
                 damageAudioSource.Play();
             }
 
             // Detener la música del gameplay
-            gameplayMusicSource.Stop();
+            //gameplayMusicSource.Stop();
 
             gameOverCanvas.SetActive(true);
             // Reproducir la música especial para el Game Over
-            gameOverMusicSource.volume = gameOverMusicVolume;
-            gameOverMusicSource.Play();*/
+            //gameOverMusicSource.volume = gameOverMusicVolume;
+            //gameOverMusicSource.Play(); 
 
             // Desactivar el objeto después de la duración del sonido de daño
             gameObject.SetActive(false);
@@ -74,8 +87,15 @@ public class PlayerVida : MonoBehaviour
         else
         {
             // Rebote del jugador al recibir daño
+            Vector3 lookDirection = transform.forward;
             rb.velocity = Vector3.zero;
-            rb.AddForce(Vector3.up * reboteForce, ForceMode.Impulse);
+            rb.AddForce(-lookDirection * reboteForce, ForceMode.Impulse);
+
+            // Aplica el efecto de cambio de color a los Renderers
+            foreach (Renderer renderer in playerRender)
+            {
+                StartCoroutine(FlashDamageColor(renderer));
+            }
 
             // Activar invulnerabilidad y el parpadeo del sprite
             ActivarInvulnerabilidad();
@@ -163,6 +183,21 @@ public class PlayerVida : MonoBehaviour
     {
         vidaActual = vidaMaxima;
         // Lógica adicional, si es necesario
+    }
+
+    private IEnumerator FlashDamageColor(Renderer renderer)
+    {
+        if (renderer != null)
+        {
+            // Cambia el color del material del Renderer al color de daño
+            renderer.material.color = Color.red;
+
+            // Espera un tiempo
+            yield return new WaitForSeconds(0.25f);
+
+            // Restaura el color original del material del Renderer
+            renderer.material.color = originalColors[playerRender.IndexOf(renderer)];
+        }
     }
 
     void Update()

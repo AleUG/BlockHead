@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic; // Agrega esta línea para usar List.
 
 public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 50;
     public int currentHealth;
-    public Renderer enemyRenderer;
+    public List<Renderer> enemyRenderers; // Cambia el nombre de la variable a "enemyRenderers".
+    private List<Color> originalColors = new List<Color>();
+
     public Color damageColor = Color.red;
     public float damageFlashDuration = 0.2f;
     public float pushBackForce = 5.0f;
@@ -15,7 +18,6 @@ public class EnemyHealth : MonoBehaviour
 
     private float dropProbability = 0.05f; // Probabilidad de soltar el prefab (0.3 significa 30%)
 
-    private Color originalColor;
     private Rigidbody enemyRigidbody;
     private Transform playerTransform;
 
@@ -25,9 +27,12 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth = maxHealth;
 
-        if (enemyRenderer != null)
+        foreach (Renderer renderer in enemyRenderers)
         {
-            originalColor = enemyRenderer.material.color;
+            if (renderer != null)
+            {
+                originalColors.Add(renderer.material.color);
+            }
         }
 
         enemyRigidbody = GetComponent<Rigidbody>();
@@ -86,19 +91,19 @@ public class EnemyHealth : MonoBehaviour
             enemyRigidbody.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
         }
 
-        if (enemyRenderer != null)
+        foreach (Renderer renderer in enemyRenderers)
         {
-            StartCoroutine(FlashDamageColor());
+            StartCoroutine(FlashDamageColor(renderer));
         }
     }
 
-    private IEnumerator FlashDamageColor()
+    private IEnumerator FlashDamageColor(Renderer renderer)
     {
-        if (enemyRenderer != null)
+        if (renderer != null)
         {
-            enemyRenderer.material.color = damageColor;
+            renderer.material.color = damageColor;
             yield return new WaitForSeconds(damageFlashDuration);
-            enemyRenderer.material.color = originalColor;
+            renderer.material.color = originalColors[enemyRenderers.IndexOf(renderer)];
         }
     }
 }

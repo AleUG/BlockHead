@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
+    private bool isWalking = false;
 
     private Animator animator;
 
@@ -37,7 +38,15 @@ public class PlayerMovement : MonoBehaviour
 
             Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            isWalking = true;
         }
+        else
+        {
+            isWalking = false;
+        }
+
+        animator.SetBool("Horizontal", isWalking);
     }
 
     private void Update()

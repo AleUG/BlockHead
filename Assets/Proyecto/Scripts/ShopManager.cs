@@ -7,12 +7,11 @@ public class ShopManager : MonoBehaviour
 {
     public TextMeshProUGUI orbCountText; // Referencia al TextMeshPro Text para mostrar la cantidad de orbes
     public GameObject canvasShop;
-    public List<int> itemPrices; // Lista de precios de los artículos
+    public List<ShopItem> shopItems; // Lista de ítems de la tienda
 
     private StatsUpgrade stats;
     private PauseManager pauseManager;
     private OrbCollector orbScript;
-
     private bool isShopOpen;
 
     private void Start()
@@ -33,12 +32,12 @@ public class ShopManager : MonoBehaviour
 
     public void BuyItem(int itemIndex)
     {
-        if (itemIndex >= 0 && itemIndex < itemPrices.Count)
+        if (itemIndex >= 0 && itemIndex < shopItems.Count)
         {
-            int itemCost = itemPrices[itemIndex]; // Obtiene el precio del artículo seleccionado
+            ShopItem currentItem = shopItems[itemIndex]; // Obtiene el ítem seleccionado
 
             // Comprueba si el jugador tiene suficientes orbes para comprar el artículo
-            if (FindObjectOfType<OrbCollector>().SpendOrbs(itemCost))
+            if (FindObjectOfType<OrbCollector>().SpendOrbs(currentItem.itemPrice))
             {
                 // Realiza aquí las acciones necesarias para dar al jugador el artículo comprado
                 Debug.Log("Has comprado el artículo.");
@@ -56,6 +55,9 @@ public class ShopManager : MonoBehaviour
                     stats.UpgradeDamage();
                 }
 
+                // Aumenta el precio del ítem para la siguiente compra
+                currentItem.itemPrice += 50; // Puedes ajustar esto
+
                 // Actualiza el contador de orbes en el TextMeshPro Text
                 orbScript.UpdateOrbText();
             }
@@ -63,7 +65,7 @@ public class ShopManager : MonoBehaviour
             {
                 // El jugador no tiene suficientes orbes para comprar el artículo
                 Debug.Log("No tienes suficientes orbes para comprar este artículo.");
-                //Condición para que no se ejecute el el botón
+                //Condición para que no se ejecute el botón
             }
         }
         else
@@ -87,5 +89,12 @@ public class ShopManager : MonoBehaviour
         {
             pauseManager.ResumeGame();
         }
+    }
+
+    [System.Serializable]
+    public class ShopItem
+    {
+        public int itemPrice; // Precio del ítem
+                              // Puedes agregar más atributos aquí según sea necesario para cada ítem
     }
 }
