@@ -8,6 +8,8 @@ public class PlayerBlock : MonoBehaviour
 
     private PlayerVida playerVida;
 
+    public AudioSource sound;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -29,8 +31,17 @@ public class PlayerBlock : MonoBehaviour
 
     private void StartBlocking()
     {
+        sound.Play();
+
         isBlocking = true;
         animator.SetBool("Block", true);
+
+        if(isBlocking == true)
+        {
+            animator.SetBool("Ataque", false);
+            animator.SetBool("ComboAttack1", false);
+            animator.SetBool("ComboAttack2", false);
+        }
 
         playerVida.ActivarInvulnerabilidad();
 

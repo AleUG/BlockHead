@@ -3,41 +3,37 @@ using TMPro;
 
 public class OrbCollector : MonoBehaviour
 {
-    private int orbCount = 0; // Contador de orbes
+    private int currentSceneOrbs = 0; // Orbes recolectados en la escena actual
+    private static int totalOrbs = 0; // Total de orbes recolectados en todas las escenas (estático)
     public TextMeshProUGUI orbText; // Referencia al TextMeshPro Text
 
     private void Start()
     {
+        orbText = GameObject.Find("OrbText").GetComponent<TextMeshProUGUI>();
+
+        LoadTotalOrbs(); // Carga el total de orbes recolectados al iniciar
         UpdateOrbText(); // Actualiza el TextMeshPro Text al iniciar
     }
 
-    // Método para incrementar el contador de orbes
+    // Método para incrementar el contador de orbes en la escena actual
     public void CollectOrb()
     {
-        orbCount++;
+        currentSceneOrbs++;
+        totalOrbs++;
         UpdateOrbText(); // Actualiza el TextMeshPro Text al recolectar un orbe
-
-        // Puedes agregar aquí cualquier efecto o sonido cuando se recolecta un orbe
-        // Por ejemplo: AudioSource.PlayClipAtPoint(sonidoOrbe, transform.position);
+        SaveTotalOrbs(); // Guarda el total de orbes después de recolectar
     }
 
-    // Método para obtener el número actual de orbes
-    public int GetOrbCount()
+    // Método para obtener el número actual de orbes en la escena actual
+    public int GetCurrentSceneOrbs()
     {
-        return orbCount;
+        return currentSceneOrbs;
     }
 
-    public bool SpendOrbs(int amount)
+    // Método para obtener el número total de orbes en todas las escenas
+    public static int GetTotalOrbs()
     {
-        if (orbCount >= amount)
-        {
-            orbCount -= amount;
-            return true; // Devuelve verdadero si el jugador tenía suficientes orbes para gastar
-        }
-        else
-        {
-            return false; // Devuelve falso si el jugador no tenía suficientes orbes
-        }
+        return totalOrbs;
     }
 
     // Método para actualizar el TextMeshPro Text con el contador actual
@@ -45,14 +41,53 @@ public class OrbCollector : MonoBehaviour
     {
         if (orbText != null)
         {
-            orbText.text = orbCount.ToString(); // Actualiza el texto
+            orbText.text = totalOrbs.ToString(); // Actualiza el texto con las orbes de la escena actual
         }
     }
 
-    // Puedes llamar a este método para reiniciar el contador de orbes
-    public void ResetOrbCount()
+    // Método para guardar el total de orbes en PlayerPrefs
+    private void SaveTotalOrbs()
     {
-        orbCount = 0;
-        UpdateOrbText(); // Actualiza el TextMeshPro Text al reiniciar
+        PlayerPrefs.SetInt("TotalOrbs", totalOrbs);
+        PlayerPrefs.Save(); // Guarda los cambios en PlayerPrefs
+    }
+
+    // Método para cargar el total de orbes desde PlayerPrefs
+    private void LoadTotalOrbs()
+    {
+        if (PlayerPrefs.HasKey("TotalOrbs"))
+        {
+            totalOrbs = PlayerPrefs.GetInt("TotalOrbs");
+        }
+    }
+
+    // Puedes llamar a este método cuando el jugador alcance un punto de control o complete la escena
+    public void SaveSceneOrbs()
+    {
+        PlayerPrefs.SetInt("SceneOrbs", currentSceneOrbs);
+        PlayerPrefs.Save();
+    }
+
+    // Puedes llamar a este método cuando el jugador muera para restar las orbes recolectadas en la escena actual
+    public void SubtractSceneOrbs()
+    {
+        totalOrbs -= currentSceneOrbs;
+        SaveTotalOrbs();
+        PlayerPrefs.DeleteKey("SceneOrbs");
+    }
+
+    // Método para gastar orbes
+    public bool SpendOrbs(int amount)
+    {
+        if (totalOrbs >= amount)
+        {
+            totalOrbs -= amount;
+            SaveTotalOrbs();
+            return true; // Devuelve verdadero si el jugador tenía suficientes orbes para gastar
+        }
+        else
+        {
+            return false; // Devuelve falso si el jugador no tenía suficientes orbes
+        }
     }
 }

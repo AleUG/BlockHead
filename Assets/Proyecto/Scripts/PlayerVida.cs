@@ -22,7 +22,7 @@ public class PlayerVida : MonoBehaviour
     public AudioSource gameOverMusicSource; // Referencia al AudioSource de la música del Game Over
     public AudioSource damageAudioSource; // Referencia al AudioSource para reproducir el sonido de daño
 
-    private float gameOverMusicVolume = 0.5f; // Volumen de la música especial para el Game Over
+    //private float gameOverMusicVolume = 0.5f; // Volumen de la música especial para el Game Over
 
     private bool invulnerable = false;
     private bool isTakingDamage = false; // Indica si el jugador está recibiendo daño actualmente
@@ -31,10 +31,14 @@ public class PlayerVida : MonoBehaviour
     public float invulnerabilityDuration = 2f;
     public float blinkInterval = 0.2f;
 
+    private OrbCollector orbCollector;
+
     private void Start()
     {
-        vidaActual = vidaMaxima; // Establece la vida actual al valor máximo al iniciar
+        vidaMaxima = PlayerPrefs.GetFloat("MaxLife", vidaMaxima); // Cargar vida Máxima desde PlayerPrefs
+        vidaActual = PlayerPrefs.GetFloat("CurrentLife", vidaMaxima); // Cargar vida actual desde PlayerPrefs
         rb = GetComponent<Rigidbody>();
+        orbCollector = GetComponent<OrbCollector>();
 
         // Guarda los colores originales de los Renderers en la lista originalColors
         foreach (Renderer renderer in playerRender)
@@ -62,6 +66,8 @@ public class PlayerVida : MonoBehaviour
 
         if (vidaActual <= 0)
         {
+            orbCollector.SubtractSceneOrbs();
+
             // El jugador ha perdido toda su vida
 
             // Deshabilitar los controles del jugador (opcional)

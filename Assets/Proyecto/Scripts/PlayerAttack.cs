@@ -8,6 +8,8 @@ public class PlayerAttack : MonoBehaviour
     public int attackDamage = 1;
     public float comboWindow = 1.5f;
     public float maxTurnDistance = 5.0f;
+    public float attackForwardDistance = 1.0f; // Distancia hacia adelante al atacar
+    public float attackForwardDuration = 0.5f; // Duración del movimiento hacia adelante
 
     private Animator animator;
     private Coroutine attackCoroutine;
@@ -23,11 +25,16 @@ public class PlayerAttack : MonoBehaviour
     public AudioClip attackAudioClip; // Referencia al AudioClip para el sonido de ataque
     public AudioSource audioSource; // Referencia al AudioSource
 
-
     private void Start()
     {
+
         animator = GetComponent<Animator>();
         comboText = GameObject.Find("ComboText").GetComponent<TextMeshProUGUI>();
+
+        // Cargar daño desde PlayerPrefs
+        attackDamage = PlayerPrefs.GetInt("AttackDamage", attackDamage);
+
+
     }
 
     private void Update()
@@ -60,77 +67,106 @@ public class PlayerAttack : MonoBehaviour
     }
 
     void PerformAttack()
-{
-    if (!isAttacking)
     {
-        // Verificar si el personaje está en el estado de salto
-        bool isJumping = animator.GetBool("Jump");
-
-        // Si el personaje está saltando, puede realizar un ataque especial
-        if (isJumping)
+        if (!isAttacking)
         {
-            isAttacking = true;
-            // Ejecuta la animación de ataque especial para el salto
-            animator.SetTrigger("JumpAttack");
-        }
-        else
-        {
-            // Encuentra el enemigo más cercano
-            GameObject nearestEnemy = FindNearestEnemy();
+            // Verificar si el personaje está en el estado de salto
+            bool isJumping = animator.GetBool("Jump");
+            
 
-            if (nearestEnemy != null)
+            // Si el personaje está saltando, puede realizar un ataque especial
+            if (isJumping)
             {
-                // Calcula la distancia al enemigo más cercano
-                float distanceToEnemy = Vector3.Distance(transform.position, nearestEnemy.transform.position);
+                // Ejecuta la animación de ataque especial para el salto
+                animator.SetTrigger("JumpAttack");
+            }
+            else
+            {
+                // Encuentra el enemigo más cercano
+                GameObject nearestEnemy = FindNearestEnemy();
 
-                // Comprueba si la distancia es menor que la distancia máxima para girar
-                if (distanceToEnemy < maxTurnDistance)
+                if (nearestEnemy != null)
                 {
-                    // Gira al jugador hacia el enemigo más cercano
-                    Vector3 targetDirection = nearestEnemy.transform.position - transform.position;
-                    targetDirection.y = 0f;
-                    transform.rotation = Quaternion.LookRotation(targetDirection);
+                    // Calcula la distancia al enemigo más cercano
+                    float distanceToEnemy = Vector3.Distance(transform.position, nearestEnemy.transform.position);
+
+                    // Comprueba si la distancia es menor que la distancia máxima para girar
+                    if (distanceToEnemy < maxTurnDistance)
+                    {
+                        // Gira al jugador hacia el enemigo más cercano
+                        Vector3 targetDirection = nearestEnemy.transform.position - transform.position;
+                        targetDirection.y = 0f;
+                        transform.rotation = Quaternion.LookRotation(targetDirection);
+                    }
                 }
-            }
 
-            lastAttackTime = Time.time;
-            isAttacking = true;
-            animator.SetTrigger("Ataque");
-            if (attackCoroutine != null)
-            {
-                StopCoroutine(attackCoroutine);
+                lastAttackTime = Time.time;
+                isAttacking = true;
+                animator.SetTrigger("Ataque");
+
+                if (attackCoroutine != null)
+                {
+                    StopCoroutine(attackCoroutine);
+                }
+                attackCoroutine = StartCoroutine(DisableAttackCollider());
             }
-            attackCoroutine = StartCoroutine(DisableAttackCollider());
+        }
+
+        else if (Time.time - lastAttackTime <= comboWindow)
+        {
+            if (!animator.GetBool("ComboAttack1"))
+            {
+                lastAttackTime = Time.time;
+                animator.SetBool("ComboAttack1", true);
+
+                if (attackCoroutine != null)
+                {
+                    StopCoroutine(attackCoroutine);
+                }
+                attackCoroutine = StartCoroutine(DisableAttackCollider());
+
+                // Calcula la posición final al atacar en la dirección hacia adelante
+                Vector3 attackForwardPosition = transform.position + transform.forward * attackForwardDistance;
+
+                // Inicia la corrutina para moverse hacia adelante
+                attackCoroutine = StartCoroutine(MoveForward(attackForwardPosition, attackForwardDuration));
+                return;
+            }
+            else if (!animator.GetBool("ComboAttack2"))
+            {
+                lastAttackTime = Time.time;
+                animator.SetBool("ComboAttack2", true);
+                if (attackCoroutine != null)
+                {
+                    StopCoroutine(attackCoroutine);
+                }
+                attackCoroutine = StartCoroutine(DisableAttackCollider());
+
+                // Calcula la posición final al atacar en la dirección hacia adelante
+                Vector3 attackForwardPosition = transform.position + transform.forward * attackForwardDistance;
+
+                // Inicia la corrutina para moverse hacia adelante
+                attackCoroutine = StartCoroutine(MoveForward(attackForwardPosition, attackForwardDuration));
+                return;
+            }
         }
     }
 
-    else if (Time.time - lastAttackTime <= comboWindow)
+    IEnumerator MoveForward(Vector3 targetPosition, float duration)
     {
-        if (!animator.GetBool("ComboAttack1"))
-        {
-            lastAttackTime = Time.time;
-            animator.SetBool("ComboAttack1", true);
-            if (attackCoroutine != null)
-            {
-                StopCoroutine(attackCoroutine);
-            }
-            attackCoroutine = StartCoroutine(DisableAttackCollider());
-            return;
-        }
-        else if (!animator.GetBool("ComboAttack2"))
-        {
-            lastAttackTime = Time.time;
-            animator.SetBool("ComboAttack2", true);
-            if (attackCoroutine != null)
-            {
-                StopCoroutine(attackCoroutine);
-            }
-            attackCoroutine = StartCoroutine(DisableAttackCollider());
-            return;
-        }
-    }
-}
+        float startTime = Time.time;
+        Vector3 initialPosition = transform.position;
 
+        while (Time.time - startTime < duration)
+        {
+            float t = (Time.time - startTime) / duration;
+            transform.position = Vector3.Lerp(initialPosition, targetPosition, t);
+            yield return null;
+        }
+
+        // Asegúrate de llegar exactamente a la posición objetivo
+        transform.position = targetPosition;
+    }
 
     IEnumerator DisableAttackCollider()
     {

@@ -2,75 +2,94 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    public float originalMoveSpeed = 3.5f; // Almacena el valor original de moveSpeed
-    public float followDistance = 5.0f; // Distancia a partir de la cual el enemigo seguirá al jugador
+    public float originalMoveSpeed = 3.5f;
+    public float moveSpeed = 3.5f;
+    public float followDistance = 5.0f;
     public float rotationSpeed = 10f;
+    public float attackDistance = 2.0f;
 
-    public float attackDistance = 2.0f; // Distancia a partir de la cual el enemigo comenzará a atacar
     private bool isAttacking = false;
-    private bool isCooldown = false; // Para evitar que el enemigo siga inmediatamente después del ataque
-    private float attackCooldown = 0.5f; // Tiempo de enfriamiento después del ataque
+    private bool isCooldown = false;
+    private float attackCooldown = 0.5f;
 
     private EnemyHealth enemyHealth;
-
     private Transform player;
     private Animator animator;
 
-    private void Start()
+    private float wanderTimer = 2.0f;
+    private float wanderInterval = 2.0f;
+
+    void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         animator = GetComponent<Animator>();
-
         enemyHealth = GetComponent<EnemyHealth>();
 
-        // Almacena el valor original de moveSpeed en la variable originalMoveSpeed
         originalMoveSpeed = moveSpeed;
+        wanderTimer = wanderInterval;
     }
-
-    public float moveSpeed = 3.5f; // Ahora es una variable pública para modificar en el Inspector
 
     void Update()
     {
+
         if (player != null)
         {
             Vector3 directionToPlayer = player.position - transform.position;
-            directionToPlayer.y = 0; // No queremos mover en la dirección vertical
+            directionToPlayer.y = 0;
 
             if (!isAttacking)
             {
                 if (directionToPlayer.magnitude <= followDistance)
                 {
-                    // Calcula la dirección hacia la posición del jugador
+                    // Código para seguir al jugador
                     Vector3 moveDirection = directionToPlayer.normalized;
-
-                    // Mueve al enemigo hacia la posición del jugador
                     transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-                    // Calcula la rotación hacia la dirección del jugador
                     Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-
-                    // Suaviza la rotación usando Slerp
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
                     animator.SetBool("Walk", true);
 
                     if (directionToPlayer.magnitude <= attackDistance)
                     {
                         isAttacking = true;
-                        animator.SetTrigger("Ataque");
-                        // Detener el movimiento durante la animación de ataque
+                        animator.SetBool("Ataque", true);
                         moveSpeed = 0f;
+                    }
+                    else
+                    {
+                        animator.SetBool("Ataque", false);
+
                     }
                 }
                 else
                 {
-                    // Si el enemigo está fuera de rango de ataque, desactiva la animación de caminar
-                    animator.SetBool("Walk", false);
+                    // Caminata aleatoria
+                    wanderTimer -= Time.deltaTime;
+                    if (wanderTimer <= 0)
+                    {
+                        Vector3 randomDirection = Random.insideUnitCircle.normalized;
+                        Vector3 targetPosition = transform.position + randomDirection * 5f;
+                        Vector3 moveDirection = targetPosition - transform.position;
+                        moveDirection.y = 0;
+                        moveDirection.Normalize(); // Normalizar la dirección
+                        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+                        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+                        animator.SetBool("Walk", true);
+                        animator.SetBool("Ataque", false);
+
+                        wanderTimer = wanderInterval;
+                    }
+                    else
+                    {
+                        animator.SetBool("Walk", false);
+                        animator.SetBool("Ataque", false);
+                    }
                 }
             }
             else
             {
-                // El enemigo está atacando, inicia el enfriamiento
+                // Enfriamiento después del ataque
                 if (!isCooldown)
                 {
                     isCooldown = true;
@@ -82,8 +101,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void FinishAttack()
     {
-        // La animación de ataque ha terminado, permite que el enemigo vuelva a moverse y seguir al jugador
-        moveSpeed = originalMoveSpeed; // Restaura el valor original de moveSpeed
+        moveSpeed = originalMoveSpeed;
         isAttacking = false;
         isCooldown = false;
     }

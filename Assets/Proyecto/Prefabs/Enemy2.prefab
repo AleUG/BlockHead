@@ -99,8 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16a005761e9a7474490e8275f90898f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
-  currentHealth: 3
+  maxHealth: 7
+  currentHealth: 7
   enemyRenderers:
   - {fileID: 3951222416812498661}
   - {fileID: 4139912424986783785}
@@ -112,10 +112,13 @@ MonoBehaviour:
   - {fileID: 6591030378129274800}
   damageColor: {r: 1, g: 0, b: 0, a: 1}
   damageFlashDuration: 0.15
-  pushBackForce: 7.5
+  pushBackForce: 3.5
   dropPrefab: {fileID: 2860503590099227161, guid: 9d2219eb705acd24cb1a76089aade6a2,
     type: 3}
   dropOrb: {fileID: 9197531146774138021, guid: 6171bc3fe6cd13c4aa340d66ac823ae3, type: 3}
+  bloodParticlesPrefab: {fileID: 6017034971551500356, guid: d83ad6a09ac54d9498367b4dbb0fbe46,
+    type: 3}
+  damageAnimationDuration: 0.4
 --- !u!114 &7309153532777854706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,10 +144,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3126b495da3d532469e8783b28cccd95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionRadius: 22
-  attackRange: 20
+  visionRadius: 17.5
+  attackRange: 17.5
   gunTransform: {fileID: 3105797097073284396}
-  bulletSpeed: 15
+  bulletSpeed: 13.5
   bulletLifetime: 5
   timeBetweenAttacks: 2
   bulletPrefab: {fileID: 1407181962998454760, guid: 41759dff42de7174cbb1468b7a3dcbcb,

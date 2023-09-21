@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; // Agrega esta línea para usar List.
+using System.Collections.Generic;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -18,10 +18,16 @@ public class EnemyHealth : MonoBehaviour
 
     private float dropProbability = 0.05f; // Probabilidad de soltar el prefab (0.3 significa 30%)
 
+    public GameObject bloodParticlesPrefab; // Prefab de partículas de sangre
+
     private Rigidbody enemyRigidbody;
     private Transform playerTransform;
 
-    private Orb orbScript;
+    private Animator animator;
+
+    // Tiempo de duración de la animación de daño
+    public float damageAnimationDuration = 0.4f;
+    private bool isDamaged = false;
 
     void Start()
     {
@@ -37,6 +43,7 @@ public class EnemyHealth : MonoBehaviour
 
         enemyRigidbody = GetComponent<Rigidbody>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(int damageAmount)
@@ -47,6 +54,12 @@ public class EnemyHealth : MonoBehaviour
         {
             EnemyDamage();
             Die();
+
+            // Instancia partículas de sangre al morir
+            if (bloodParticlesPrefab != null)
+            {
+                Instantiate(bloodParticlesPrefab, transform.position, Quaternion.identity);
+            }
 
             // Verificar si el enemigo soltará el prefab
             if (Random.value <= dropProbability && dropPrefab != null)
@@ -72,8 +85,24 @@ public class EnemyHealth : MonoBehaviour
         }
         else
         {
+            // El enemigo está dañado, activa la animación de daño y establece el tiempo de duración
+            if (!isDamaged)
+            {
+                isDamaged = true;
+                animator.SetBool("Damage", true);
+                StartCoroutine(ResetDamageAnimation());
+            }
             EnemyDamage();
         }
+    }
+
+    private IEnumerator ResetDamageAnimation()
+    {
+        // Espera el tiempo de duración de la animación de daño
+        yield return new WaitForSeconds(damageAnimationDuration);
+        // Desactiva la animación de daño
+        animator.SetBool("Damage", false);
+        isDamaged = false;
     }
 
     void Die()
@@ -81,7 +110,7 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject, 0.05f);
     }
 
-    private void EnemyDamage()
+    public void EnemyDamage()
     {
         if (enemyRigidbody != null)
         {
@@ -95,6 +124,8 @@ public class EnemyHealth : MonoBehaviour
         {
             StartCoroutine(FlashDamageColor(renderer));
         }
+
+        animator.SetBool("Ataque", false);
     }
 
     private IEnumerator FlashDamageColor(Renderer renderer)

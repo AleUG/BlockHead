@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StatsUpgrade : MonoBehaviour
@@ -8,18 +6,21 @@ public class StatsUpgrade : MonoBehaviour
     private PlayerAttack playerAttack;
     private PlayerMovement playerMove;
 
+    private Animator animator;
+    private GameObject canvasLife;
+
     public float lifeUpgrade = 25.0f;
     public float moveSpeedUpgrade = 0.5f;
     public int attackUpgrade = 2;
 
-    public GameObject canvasLife;
-    private Animator animator;
+    public int lifeUpgradesBought = 0; // Variable para llevar un registro de las vidas compradas
+    private int speedUpgradesBought = 0; // Variable para llevar un registro de las mejoras de velocidad compradas
+    private int damageUpgradesBought = 0; // Variable para llevar un registro de las mejoras de daño compradas
 
-    private int lifeUpgradesBought = 0; // Variable para llevar un registro de las vidas compradas
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        canvasLife = GameObject.Find("LifeManager");
+
         // Buscamos al jugador con la etiqueta "Player"
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         animator = canvasLife.GetComponent<Animator>();
@@ -31,16 +32,30 @@ public class StatsUpgrade : MonoBehaviour
             playerAttack = player.GetComponent<PlayerAttack>();
             playerMove = player.GetComponent<PlayerMovement>();
         }
+
+        // Cargar el número de mejoras realizadas desde PlayerPrefs
+        lifeUpgradesBought = PlayerPrefs.GetInt("LifeUpgrades", 0);
+        speedUpgradesBought = PlayerPrefs.GetInt("SpeedUpgrades", 0);
+        damageUpgradesBought = PlayerPrefs.GetInt("DamageUpgrades", 0);
+    }
+
+
+    private void SaveUpgradeCounts()
+    {
+        // Guardar el número de mejoras realizadas en PlayerPrefs
+        PlayerPrefs.SetInt("LifeUpgrades", lifeUpgradesBought);
+        PlayerPrefs.SetInt("SpeedUpgrades", speedUpgradesBought);
+        PlayerPrefs.SetInt("DamageUpgrades", damageUpgradesBought);
     }
 
     public void UpgradeLife()
     {
-        if (playerVida != null)
+        if (playerVida != null && lifeUpgradesBought < 3)
         {
             playerVida.vidaMaxima += lifeUpgrade;
             playerVida.vidaActual += lifeUpgrade;
 
-            // Aplica una animación diferente en la primera compra de vida
+            // Activa las animaciones de escala según el número de mejoras de vida compradas
             if (lifeUpgradesBought == 0)
             {
                 animator.SetTrigger("Scale1");
@@ -48,8 +63,6 @@ public class StatsUpgrade : MonoBehaviour
             else if (lifeUpgradesBought == 1)
             {
                 animator.SetTrigger("Scale2");
-                // Aquí puedes aplicar una animación diferente para compras posteriores de vida
-                // animator.SetTrigger("OtraAnimacion");
             }
             else if (lifeUpgradesBought == 2)
             {
@@ -57,22 +70,43 @@ public class StatsUpgrade : MonoBehaviour
             }
 
             lifeUpgradesBought++;
+
+            // Guardar el número de mejoras realizadas
+            SaveUpgradeCounts();
+
+            // Guardar las estadísticas actualizadas en PlayerPrefs
+            PlayerPrefs.SetFloat("MaxLife", playerVida.vidaMaxima);
+            PlayerPrefs.SetFloat("CurrentLife", playerVida.vidaActual);
         }
     }
 
     public void UpgradeVelocity()
     {
-        if (playerMove != null)
+        if (playerMove != null && speedUpgradesBought < 3)
         {
             playerMove.speed += moveSpeedUpgrade;
+            speedUpgradesBought++;
+
+            // Guardar el número de mejoras realizadas
+            SaveUpgradeCounts();
+
+            // Guardar la velocidad actualizada en PlayerPrefs
+            PlayerPrefs.SetFloat("MoveSpeed", playerMove.speed);
         }
     }
 
     public void UpgradeDamage()
     {
-        if (playerAttack != null)
+        if (playerAttack != null && damageUpgradesBought < 3)
         {
             playerAttack.attackDamage += attackUpgrade;
+            damageUpgradesBought++;
+
+            // Guardar el número de mejoras realizadas
+            SaveUpgradeCounts();
+
+            // Guardar el daño actualizado en PlayerPrefs
+            PlayerPrefs.SetInt("AttackDamage", playerAttack.attackDamage);
         }
     }
 }

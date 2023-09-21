@@ -8,11 +8,11 @@ public class CambiarEscena : MonoBehaviour
     public string[] nombresEscenas; // Los nombres de las escenas a las que se desea cambiar
     public Button[] botonesCambiarEscena; // Los botones que se utilizarán para cambiar de escena
     private Animator animator;
-    //[SerializeField] private AnimationClip animacionFinal;
+    [SerializeField] private AnimationClip animacionFinal;
 
     private void Start()
     {
-        //animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
         // Agregar el evento de clic a cada botón
         for (int i = 0; i < botonesCambiarEscena.Length; i++)
@@ -27,13 +27,13 @@ public class CambiarEscena : MonoBehaviour
         StartCoroutine(CargarEscenaConTransicion(index)); // Inicia la corutina para cargar la escena con transición
     }
 
-    IEnumerator CargarEscenaConTransicion(int index)
+    public IEnumerator CargarEscenaConTransicion(int index)
     {
         // Iniciar animación de oscurecimiento
-        //animator.SetTrigger("Iniciar");
+        animator.SetTrigger("Iniciar");
 
         // Esperar un breve momento para que la animación de oscurecimiento se complete
-        yield return new WaitForSeconds(0.1f/*animacionFinal.length*/);
+        yield return new WaitForSeconds(animacionFinal.length);
 
         // Verificar si el índice es válido y cargar la escena correspondiente
         if (index >= 0 && index < nombresEscenas.Length)

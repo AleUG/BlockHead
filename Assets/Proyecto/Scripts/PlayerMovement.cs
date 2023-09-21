@@ -20,6 +20,9 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+
+        // Cargar velocidad desde PlayerPrefs
+        speed = PlayerPrefs.GetFloat("MoveSpeed", speed);
     }
 
     private void FixedUpdate()

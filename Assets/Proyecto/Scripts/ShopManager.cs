@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ShopManager : MonoBehaviour
 {
@@ -10,15 +11,18 @@ public class ShopManager : MonoBehaviour
     public List<ShopItem> shopItems; // Lista de ítems de la tienda
 
     private StatsUpgrade stats;
-    private PauseManager pauseManager;
     private OrbCollector orbScript;
-    private bool isShopOpen;
+    private bool isShopOpen = false; // Variable para controlar el estado del canvas
+    private Animator animator;
+    public float delayBeforeClosing = 1.0f; // Tiempo de retraso antes de cerrar la tienda
 
     private void Start()
     {
         orbScript = FindObjectOfType<OrbCollector>();
         stats = GetComponent<StatsUpgrade>();
-        pauseManager = GetComponent<PauseManager>();
+        animator = canvasShop.GetComponent<Animator>();
+
+        canvasShop.SetActive(false);
     }
 
     private void Update()
@@ -26,7 +30,19 @@ public class ShopManager : MonoBehaviour
         // Abre o cierra el menú de compra cuando se presiona el botón TAB
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            ToggleShopMenu();
+            if (!isShopOpen)
+            {
+                canvasShop.SetActive(true);
+                isShopOpen = true;
+                animator.SetBool("End", false);
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                animator.SetBool("End", true);
+                StartCoroutine(DelayedCloseShop());
+                Time.timeScale = 1f;
+            }
         }
     }
 
@@ -60,6 +76,9 @@ public class ShopManager : MonoBehaviour
 
                 // Actualiza el contador de orbes en el TextMeshPro Text
                 orbScript.UpdateOrbText();
+
+                // Cierra la tienda después de una compra
+                StartCoroutine(DelayedCloseShop());
             }
             else
             {
@@ -74,27 +93,20 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    private void ToggleShopMenu()
+    private IEnumerator DelayedCloseShop()
     {
-        // Activa o desactiva el Canvas de compra
-        canvasShop.SetActive(!canvasShop.activeSelf);
+        // Espera un tiempo antes de desactivar la tienda
+        yield return new WaitForSeconds(delayBeforeClosing);
 
-        // Pausa o reanuda el juego según si el menú de la tienda está abierto o cerrado
-        isShopOpen = !isShopOpen;
-        if (isShopOpen)
-        {
-            pauseManager.PauseGame();
-        }
-        else
-        {
-            pauseManager.ResumeGame();
-        }
+        // Cierra la tienda
+        canvasShop.SetActive(false);
+        isShopOpen = false;
     }
+}
 
-    [System.Serializable]
-    public class ShopItem
-    {
-        public int itemPrice; // Precio del ítem
-                              // Puedes agregar más atributos aquí según sea necesario para cada ítem
-    }
+[System.Serializable]
+public class ShopItem
+{
+    public int itemPrice; // Precio del ítem
+    // Puedes agregar más atributos aquí según sea necesario para cada ítem
 }
