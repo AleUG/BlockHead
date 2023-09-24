@@ -9,7 +9,7 @@ public class ShieldPush : MonoBehaviour
     public AudioClip sound;
     public AudioSource shieldSound;
 
-    private int golpesRecibidos = 0; // Variable para llevar el registro de golpes recibidos
+    public int golpesRecibidos = 0; // Variable para llevar el registro de golpes recibidos
     public int golpesMaximos = 3; // Número máximo de golpes que el escudo puede aguantar
 
     private bool isCooldown = false; // Variable para controlar el enfriamiento

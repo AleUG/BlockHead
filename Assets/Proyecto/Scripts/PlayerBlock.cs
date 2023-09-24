@@ -8,12 +8,16 @@ public class PlayerBlock : MonoBehaviour
 
     private PlayerVida playerVida;
 
+    public GameObject shield;
+    private ShieldPush shieldPush;
+
     public AudioSource sound;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         playerVida = GetComponent<PlayerVida>();
+        shieldPush = shield.GetComponent<ShieldPush>();
     }
 
     private void Update()
@@ -26,6 +30,7 @@ public class PlayerBlock : MonoBehaviour
         else if (Input.GetKeyUp(blockKey))
         {
             StopBlocking();
+            shieldPush.golpesRecibidos = 0;
         }
     }
 

@@ -22,7 +22,6 @@ public class PlayerVida : MonoBehaviour
     public AudioSource gameOverMusicSource; // Referencia al AudioSource de la música del Game Over
     public AudioSource damageAudioSource; // Referencia al AudioSource para reproducir el sonido de daño
 
-    //private float gameOverMusicVolume = 0.5f; // Volumen de la música especial para el Game Over
 
     private bool invulnerable = false;
     private bool isTakingDamage = false; // Indica si el jugador está recibiendo daño actualmente
@@ -72,7 +71,6 @@ public class PlayerVida : MonoBehaviour
 
             // Deshabilitar los controles del jugador (opcional)
             // Aquí puedes desactivar otros componentes relacionados con el jugador si es necesario
-
             // Reproducir el sonido de daño
             if (damageAudioSource != null)
             {
@@ -80,12 +78,12 @@ public class PlayerVida : MonoBehaviour
             }
 
             // Detener la música del gameplay
-            //gameplayMusicSource.Stop();
+            gameplayMusicSource.Stop();
 
             gameOverCanvas.SetActive(true);
+
             // Reproducir la música especial para el Game Over
-            //gameOverMusicSource.volume = gameOverMusicVolume;
-            //gameOverMusicSource.Play(); 
+            gameOverMusicSource.Play();
 
             // Desactivar el objeto después de la duración del sonido de daño
             gameObject.SetActive(false);

@@ -72,7 +72,7 @@ public class PlayerAttack : MonoBehaviour
         {
             // Verificar si el personaje está en el estado de salto
             bool isJumping = animator.GetBool("Jump");
-            
+
 
             // Si el personaje está saltando, puede realizar un ataque especial
             if (isJumping)
@@ -205,6 +205,7 @@ public class PlayerAttack : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+            EnemyHealthBoss enemyHealthBoss = other.GetComponent<EnemyHealthBoss>();
 
             if (enemyHealth != null)
             {
@@ -225,6 +226,28 @@ public class PlayerAttack : MonoBehaviour
                     audioSource.PlayOneShot(attackAudioClip);
                 }
             }
+
+            if (enemyHealthBoss != null)
+            {
+                enemyHealthBoss.TakeDamage(attackDamage, attackDamage);
+
+                // Incrementa el contador de combos
+                comboCount++;
+
+                // Actualiza el texto del contador de combos
+                comboText.text = "" + comboCount;
+
+                // Actualiza el tiempo del último combo
+                lastComboTime = Time.time;
+
+                // Reproducir el sonido de ataque
+                if (attackAudioClip != null)
+                {
+                    audioSource.PlayOneShot(attackAudioClip);
+                }
+            }
         }
     }
+
+
 }

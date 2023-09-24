@@ -111,3 +111,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cantidadRecuperacion: 10
+  audioHealth: {fileID: 8300000, guid: 168a55513f16ab94c92aa608d6af0d91, type: 3}
+  sfxAudio: {fileID: 0}

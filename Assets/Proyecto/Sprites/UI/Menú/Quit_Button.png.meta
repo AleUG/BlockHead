@@ -129,13 +129,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Start_Button_0
+      name: Quit_Button_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 1188
-        width: 1224
-        height: 1188
+        y: 1204
+        width: 1952
+        height: 1204
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d199851c29208804d9a9f6613ca8b623
-      internalID: -2004265975
+      spriteID: 8c477db312352dd45a995bae98f3cf7e
+      internalID: -134863719
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Start_Button_1
+      name: Quit_Button_1
       rect:
         serializedVersion: 2
-        x: 1224
-        y: 1188
-        width: 1224
-        height: 1188
+        x: 1952
+        y: 1204
+        width: 1952
+        height: 1204
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,20 +164,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f892a2b6de2f0454488258a7dac0afc9
-      internalID: -1446059001
+      spriteID: 58f5692c319c2474fb50ffe763157178
+      internalID: -659222489
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Start_Button_2
+      name: Quit_Button_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1224
-        height: 1188
+        width: 1952
+        height: 1204
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,20 +185,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d45161ed9770e5342bd1b620b5a7ccf7
-      internalID: -237215839
+      spriteID: 2b30d2ed19302d44685235e931068f10
+      internalID: -807978602
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Start_Button_3
+      name: Quit_Button_3
       rect:
         serializedVersion: 2
-        x: 1224
+        x: 1952
         y: 0
-        width: 1224
-        height: 1188
+        width: 1952
+        height: 1204
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,8 +206,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 578226c662183be43a1caf8332ef877d
-      internalID: 1760024715
+      spriteID: 0bfb3b7c10adbf048bdb15edfec0c0a4
+      internalID: -1306857938
       vertices: []
       indices: 
       edges: []
@@ -223,10 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Start_Button_0: -2004265975
-      Start_Button_2: -237215839
-      Start_Button_3: 1760024715
-      Start_Button_1: -1446059001
+      Quit_Button_0: -134863719
+      Quit_Button_3: -1306857938
+      Quit_Button_2: -807978602
+      Quit_Button_1: -659222489
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 7703005073751927976}
   - component: {fileID: 7703005073751927977}
   - component: {fileID: 7703005073751927978}
-  - component: {fileID: 7703005073751927979}
-  - component: {fileID: 7703005073751927983}
   - component: {fileID: 7703005073751927982}
+  - component: {fileID: 1175849421442383631}
+  - component: {fileID: 8415686492730623169}
+  - component: {fileID: 2041703448}
+  - component: {fileID: 7303218620175098431}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Enemy
@@ -29,7 +31,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7703005073751927957}
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.000028118488}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.000026402744}
   m_LocalPosition: {x: 248.11, y: 7.63, z: 6.1438246}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -88,52 +90,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &7703005073751927979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7703005073751927957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b28d21c9e17be48a3ddc40c25d86ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  originalMoveSpeed: 9
-  followDistance: 17.5
-  rotationSpeed: 12.5
-  attackDistance: 3
-  moveSpeed: 9
---- !u!114 &7703005073751927983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7703005073751927957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16a005761e9a7474490e8275f90898f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
-  enemyRenderers:
-  - {fileID: 5281129349090836193}
-  - {fileID: 4717234811996579000}
-  - {fileID: 2325068903502794253}
-  - {fileID: 654440280248074008}
-  - {fileID: 632598571647492477}
-  - {fileID: 5476760740004156466}
-  - {fileID: 1311789602888889002}
-  - {fileID: 3218687823790371228}
-  - {fileID: 1441446086887858450}
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  damageFlashDuration: 0.15
-  pushBackForce: 2
-  dropPrefab: {fileID: 0}
-  dropOrb: {fileID: 0}
 --- !u!114 &7703005073751927982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +103,88 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 7
+--- !u!114 &1175849421442383631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7703005073751927957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ddc9d49317357439d65c91ce25f1a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vidaMaxima: 200
+  vidaActual: 200
+  enemyRenderers:
+  - {fileID: 5281129349090836193}
+  - {fileID: 4717234811996579000}
+  - {fileID: 2325068903502794253}
+  - {fileID: 1835918897103010885}
+  - {fileID: 654440280248074008}
+  - {fileID: 632598571647492477}
+  - {fileID: 5476760740004156466}
+  - {fileID: 1311789602888889002}
+  - {fileID: 3218687823790371228}
+  - {fileID: 1441446086887858450}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  damageFlashDuration: 0.2
+  pushBackForce: 4.5
+  bloodParticlesPrefab: {fileID: 6017034971551500356, guid: d83ad6a09ac54d9498367b4dbb0fbe46,
+    type: 3}
+  dropPrefab: {fileID: 0}
+  dropOrb: {fileID: 9197531146774138021, guid: 6171bc3fe6cd13c4aa340d66ac823ae3, type: 3}
+  healthBarImage: {fileID: 0}
+  damageIndicator: {fileID: 0}
+  damageAnimationDuration: 0.2
+--- !u!114 &8415686492730623169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7703005073751927957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03772dbcf9ce67b469b4eb0400920b76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalMoveSpeed: 9
+  moveSpeed: 9
+  followDistance: 45
+  extraDistance: 16
+  rotationSpeed: 15
+  attackDistance: 2.75
+--- !u!114 &2041703448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7703005073751927957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26f1ed2e3c2977444abc25726ecaab1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxColliderChangeScene: {fileID: 0}
+  manosAtaque:
+  - {fileID: 0}
+--- !u!114 &7303218620175098431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7703005073751927957}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff9b7b887ea1fef4f9f4ef07a2ff535a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDistance: 9
+  attackCooldown: 2
 --- !u!1 &7703005073908689059
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,7 +1020,7 @@ PrefabInstance:
     - target: {fileID: 7876023681238672744, guid: 6f4a94e6016169445aeb71ab3a76402b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.3492317
+      value: 6.349232
       objectReference: {fileID: 0}
     - target: {fileID: 7876023681238672744, guid: 6f4a94e6016169445aeb71ab3a76402b,
         type: 3}
@@ -1047,6 +1085,12 @@ MeshRenderer:
 --- !u!23 &1441446086887858450 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 9144446725939194069, guid: 6f4a94e6016169445aeb71ab3a76402b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7703005073093495239}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1835918897103010885 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -892578249127398014, guid: 6f4a94e6016169445aeb71ab3a76402b,
     type: 3}
   m_PrefabInstance: {fileID: 7703005073093495239}
   m_PrefabAsset: {fileID: 0}

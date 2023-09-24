@@ -68,7 +68,7 @@ public class EnemyHealth : MonoBehaviour
             }
 
             // Generar una cantidad aleatoria de orbes entre 1 y 10
-            int randomOrbCount = Random.Range(1, 11);
+            int randomOrbCount = Random.Range(2, 15);
 
             // Generar varios orbes
             for (int i = 0; i < randomOrbCount; i++)
