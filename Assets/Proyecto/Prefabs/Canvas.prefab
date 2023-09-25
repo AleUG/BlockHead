@@ -2191,6 +2191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseCanvas: {fileID: 7349871781730642843}
+  optionsCanvas: {fileID: 6411647204090642957}
 --- !u!1 &7349871782542097180
 GameObject:
   m_ObjectHideFlags: 0
@@ -2907,6 +2908,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 7349871782504937229}
+    - target: {fileID: 7674517948370426049, guid: 7be94816d17b4d74da378d4d96709c48,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7674517948370426049, guid: 7be94816d17b4d74da378d4d96709c48,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3692,6 +3698,12 @@ RectTransform:
 --- !u!223 &6411647204090642954 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 4396993559224855893, guid: 296088278f1894c46abc1362101d9776,
+    type: 3}
+  m_PrefabInstance: {fileID: 7349871782451752799}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6411647204090642957 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4396993559224855890, guid: 296088278f1894c46abc1362101d9776,
     type: 3}
   m_PrefabInstance: {fileID: 7349871782451752799}
   m_PrefabAsset: {fileID: 0}

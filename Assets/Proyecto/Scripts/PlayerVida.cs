@@ -87,6 +87,8 @@ public class PlayerVida : MonoBehaviour
 
             // Desactivar el objeto después de la duración del sonido de daño
             gameObject.SetActive(false);
+
+            SetVidaMaxima();
         }
         else
         {

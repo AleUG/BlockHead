@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class VolumeController : MonoBehaviour
 {
@@ -14,7 +15,14 @@ public class VolumeController : MonoBehaviour
 
     private void Start()
     {
-        canvasOptions.SetActive(false);
+        // Obtiene el nombre de la escena actual
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        // Comprueba si el nombre de la escena actual es "MenuPrincipal", "CinemáticaIntro" o "CinemáticaOutro"
+        if (currentSceneName == "MenuPrincipal" || currentSceneName == "CinemáticaIntro" || currentSceneName == "CinemáticaOutro" || currentSceneName == "CinemáticaLevel_2" || currentSceneName == "CinemáticaLevel_1" || currentSceneName == "Credits")
+        {
+            canvasOptions.SetActive(false);
+        }
 
         if (PlayerPrefs.HasKey("musicVolume"))
         {

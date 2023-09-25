@@ -9,27 +9,27 @@ EditorBuildSettings:
     path: Assets/Proyecto/Scenes/MenuPrincipal.unity
     guid: b577bee76c7334949bc781d06397a608
   - enabled: 1
-    path: Assets/Proyecto/Scenes/Credits.unity
-    guid: 3372bcbb5fa1e7747b80bef975159d1d
+    path: "Assets/Proyecto/Scenes/Cinem\xE1ticaIntro.unity"
+    guid: 47f2b398897457046823c5e59e5f7e36
   - enabled: 1
     path: Assets/Proyecto/Scenes/Level_1.unity
     guid: 687a815bb68dc5a40949f7cc3846ba55
   - enabled: 1
+    path: "Assets/Proyecto/Scenes/Cinem\xE1ticaLevel_1.unity"
+    guid: 350214cd2a9955d4697f0b1c50da46a0
+  - enabled: 1
     path: Assets/Proyecto/Scenes/Level_2.unity
     guid: 1ccdcb4544ec59a4e911987d5c4aa862
+  - enabled: 1
+    path: "Assets/Proyecto/Scenes/Cinem\xE1ticaLevel_2.unity"
+    guid: 54d8ead13daf26e4f8e1392085fd1370
   - enabled: 1
     path: Assets/Proyecto/Scenes/Level_3.unity
     guid: 4375f0278750a3940abb12ace3b73e53
   - enabled: 1
-    path: "Assets/Proyecto/Scenes/Cinem\xE1ticaIntro.unity"
-    guid: 47f2b398897457046823c5e59e5f7e36
-  - enabled: 1
     path: "Assets/Proyecto/Scenes/Cinem\xE1ticaOutro.unity"
     guid: 21c6304031090c54b9999a7dbf7b1ee3
   - enabled: 1
-    path: "Assets/Proyecto/Scenes/Cinem\xE1ticaLevel_1.unity"
-    guid: 350214cd2a9955d4697f0b1c50da46a0
-  - enabled: 1
-    path: "Assets/Proyecto/Scenes/Cinem\xE1ticaLevel_2.unity"
-    guid: 54d8ead13daf26e4f8e1392085fd1370
+    path: Assets/Proyecto/Scenes/Credits.unity
+    guid: 3372bcbb5fa1e7747b80bef975159d1d
   m_configObjects: {}

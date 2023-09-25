@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public void Start()
+    public void DeletePlayerPrefs()
     {
         // Limpia PlayerPrefs al iniciar una nueva partida
         PlayerPrefs.DeleteAll();

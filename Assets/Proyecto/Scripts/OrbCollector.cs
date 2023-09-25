@@ -58,6 +58,11 @@ public class OrbCollector : MonoBehaviour
         if (PlayerPrefs.HasKey("TotalOrbs"))
         {
             totalOrbs = PlayerPrefs.GetInt("TotalOrbs");
+
+            if (totalOrbs <= 0)
+            {
+                totalOrbs = 0;
+            }
         }
     }
 

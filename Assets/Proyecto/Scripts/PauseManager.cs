@@ -3,6 +3,7 @@ using UnityEngine;
 public class PauseManager : MonoBehaviour
 {
     public GameObject pauseCanvas; // Referencia al canvas de pausa
+    public GameObject optionsCanvas;
     private bool isPaused = false; // Indica si el juego está pausado
 
     private void Start()
@@ -37,5 +38,6 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f; // Restaurar el timescale a 1 para reanudar el juego
         isPaused = false;
         pauseCanvas.SetActive(false); // Desactivar el canvas de pausa
+        optionsCanvas.SetActive(false);
     }
 }
