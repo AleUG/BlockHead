@@ -8,8 +8,6 @@ public class SceneTransition : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("SceneTransition Start() called in Scene 2");
-
         animator = GetComponent<Animator>();
         stats = statsUpgrade.GetComponent<StatsUpgrade>();
 
